@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Single Style Transfer - StyleXpress</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/NSTflask/static/singleStyleTransfer.css"> <!-- Link to your CSS -->
+    <link rel="stylesheet" href="../static/singleStyleTransfer.css"> <!-- Link to your CSS -->
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="/NSTflask/static/Screenshot 2024-10-25 202814.png" alt="StyleXpress Logo" style="height: 40px; width: auto; margin-right: 10px;" />
+                <img src="../static/Screenshot 2024-10-25 202814.png" alt="StyleXpress Logo" style="height: 40px; width: auto; margin-right: 10px;" />
                 
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,37 +102,79 @@
             }
         });
 
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
+        // form.addEventListener('submit', async function(event) {
+        //     event.preventDefault();
 
-            const contentImage = contentImageInput.files[0];
-            const styleImage = styleImageInput.files[0];
+        //     const contentImage = contentImageInput.files[0];
+        //     const styleImage = styleImageInput.files[0];
 
-            if (!contentImage || !styleImage) return;
+        //     if (!contentImage || !styleImage) return;
 
-            const formData = new FormData();
-            formData.append('contentImage', contentImage);
-            formData.append('styleImage', styleImage);
+        //     const formData = new FormData();
+        //     formData.append('contentImage', contentImage);
+        //     formData.append('styleImage', styleImage);
 
-            try {
-                const response = await fetch('/api/style-transfer', {
-                    method: 'POST',
-                    body: formData,
-                });
+        //     try {
+        //         const response = await fetch('/api/style-transfer', {
+        //             method: 'POST',
+        //             body: formData,
+        //         });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    const resultImage = document.getElementById('resultImage');
-                    resultImage.src = data.resultImageUrl; // URL of the resultant image
-                    document.getElementById('result').style.display = 'block'; // Show the result section
-                } else {
-                    alert('Error during style transfer. Please try again.');
+        //         if (response.ok) {
+        //             const data = await response.json();
+        //             const resultImage = document.getElementById('resultImage');
+        //             resultImage.src = data.resultImageUrl; // URL of the resultant image
+        //             document.getElementById('result').style.display = 'block'; // Show the result section
+        //         } else {
+        //             alert('Error during style transfer. Please try again.');
+        //         }
+        //     } catch (error) {
+        //         console.error('Error:', error);
+        //         alert('An unexpected error occurred. Please try again.');
+        //     }
+        // });
+        form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                const contentImage = contentImageInput.files[0];
+                const styleImage = styleImageInput.files[0];
+
+                if (!contentImage || !styleImage) return;
+
+                const formData = new FormData();
+                formData.append('contentImage', contentImage);
+                formData.append('styleImage', styleImage);
+
+                try {
+                    const response = await fetch('/api/style-transfer', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        const resultImage = document.getElementById('resultImage');
+                        resultImage.src = data.resultImageUrl; // URL of the resultant image
+
+                        // Automatically trigger download
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = data.resultImageUrl; // Set the link to the result image URL
+                        downloadLink.download = 'stylized_image.jpg'; // Name of the downloaded file
+                        document.body.appendChild(downloadLink); // Append to the body (not visible)
+                        downloadLink.click(); // Trigger the download
+                        document.body.removeChild(downloadLink); // Remove the link after downloading
+
+                        document.getElementById('result').style.display = 'block'; // Show the result section
+                    } else {
+                        alert('Error during style transfer. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred. Please try again.');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An unexpected error occurred. Please try again.');
-            }
-        });
+            });
+
     </script>
+   
 </body>
 </html>

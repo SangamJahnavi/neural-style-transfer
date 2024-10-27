@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Style Transfer - StyleXpress</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/NSTflask/static/singleStyleTransfer.css"> <!-- Link to your CSS -->
+    <link rel="stylesheet" href="../static/singleStyleTransfer.css"> <!-- Link to your CSS -->
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="/NSTflask/static/Screenshot 2024-10-25 202814.png" alt="StyleXpress Logo" style="height: 40px; width: auto; margin-right: 10px;" />
+                <img src="../static/Screenshot 2024-10-25 202814.png" alt="StyleXpress Logo"
+                    style="height: 40px; width: auto; margin-right: 10px;" />
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -34,10 +38,11 @@
 
     <div>
         <div class="total-content">
-            <div class="heading"> 
+            <div class="heading">
                 <h2>Multi-Style Transfer</h2>
-                <p>Transform your image using multiple artistic styles. Upload your content image and multiple style images below.</p>
-            </div>    
+                <p>Transform your image using multiple artistic styles. Upload your content image and multiple style
+                    images below.</p>
+            </div>
             <form id="style-transfer-form" class="mt-4" enctype="multipart/form-data">
                 <div class="input-container">
                     <div>
@@ -45,7 +50,8 @@
                         <input type="file" class="form-control" id="contentImage" accept="image/*" required>
                         <div class="preview-container">
                             <h5>Preview Content Image</h5>
-                            <img id="contentPreview" src="" alt="Content Image Preview" class="img-fluid mt-2" style="display: none;">
+                            <img id="contentPreview" src="" alt="Content Image Preview" class="img-fluid mt-2"
+                                style="display: none;">
                         </div>
                     </div>
                     <div>
@@ -76,11 +82,11 @@
         const stylePreviewContainer = document.getElementById('stylePreviewContainer');
         const resultContainer = document.getElementById('resultContainer');
 
-        contentImageInput.addEventListener('change', function() {
+        contentImageInput.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     contentPreview.src = event.target.result;
                     contentPreview.style.display = 'block';
                 }
@@ -88,11 +94,11 @@
             }
         });
 
-        styleImagesInput.addEventListener('change', function() {
+        styleImagesInput.addEventListener('change', function () {
             stylePreviewContainer.innerHTML = ''; // Clear previous previews
             Array.from(this.files).forEach(file => {
                 const reader = new FileReader();
-                reader.onload = function(event) {
+                reader.onload = function (event) {
                     const img = document.createElement('img');
                     img.src = event.target.result;
                     img.alt = "Style Image Preview";
@@ -104,7 +110,7 @@
             });
         });
 
-        form.addEventListener('submit', async function(event) {
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const contentImage = contentImageInput.files[0];
@@ -138,11 +144,56 @@
                 } else {
                     alert('Error during style transfer. Please try again.');
                 }
+
+
             } catch (error) {
                 console.error('Error:', error);
                 alert('An unexpected error occurred. Please try again.');
             }
         });
+
+        // form.addEventListener('submit', async function (event) {
+        //         event.preventDefault();
+
+        //         const contentImage = contentImageInput.files[0];
+        //         const styleImages = styleImagesInput.files;
+
+        //         if (!contentImage || styleImages.length < 2) return;
+
+        //         const formData = new FormData();
+        //         formData.append('contentImage', contentImage);
+        //         for (let i = 0; i < styleImages.length; i++) {
+        //             formData.append('styleImages', styleImages[i]); // Append each style image
+        //         }
+
+        //         try {
+        //             const response = await fetch('/api/multi-style-transfer', { // Update endpoint here
+        //                 method: 'POST',
+        //                 body: formData,
+        //             });
+
+        //             if (response.ok) {
+        //                 const data = await response.json();
+        //                 resultContainer.innerHTML = ''; // Clear previous results
+        //                 data.resultImageUrls.forEach(url => {
+        //                     const img = document.createElement('img');
+        //                     img.src = url; // Assuming the response contains an array of result image URLs
+        //                     img.alt = "Resultant Image";
+        //                     img.className = "img-fluid mt-2";
+        //                     resultContainer.appendChild(img);
+        //                 });
+        //                 document.getElementById('result').style.display = 'block'; // Show the result section
+        //             } else {
+        //                 alert('Error during style transfer. Please try again.');
+        //             }
+
+        //         } catch (error) {
+        //             console.error('Error:', error);
+        //             alert('An unexpected error occurred. Please try again.');
+        //         }
+        //     });
+
     </script>
 </body>
+
 </html>
